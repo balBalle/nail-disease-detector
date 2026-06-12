@@ -58,3 +58,316 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 
+# NAIL DISEASE DETECTOR
+
+Panduan Setup dan Menjalankan Aplikasi
+
+---
+
+1. PERSYARATAN SISTEM
+
+---
+
+Pastikan perangkat sudah terinstall:
+
+* PHP 8.2 atau lebih baru
+* Composer
+* Node.js dan NPM
+* MySQL
+* Python 3.10 atau lebih baru
+* Git (opsional)
+
+---
+
+2. SETUP LARAVEL
+
+---
+
+Langkah 1 - Buat Folder Project Utama
+
+```
+mkdir nail-disease-detector
+cd nail-disease-detector
+```
+
+Langkah 2 - Install Laravel
+
+```
+composer create-project laravel/laravel laravel-app
+cd laravel-app
+```
+
+Langkah 3 - Install Dependency Laravel
+
+```
+composer require laravel/ui
+
+php artisan ui bootstrap --auth
+
+composer require guzzlehttp/guzzle
+
+npm install
+npm run build
+```
+
+Langkah 4 - Konfigurasi Database
+
+Buka file:
+
+```
+laravel-app/.env
+```
+
+Ubah konfigurasi berikut:
+
+```
+APP_NAME="Nail Disease Detector"
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nail_disease_db
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Sesuaikan username dan password MySQL sesuai perangkat Anda.
+
+Langkah 5 - Buat Database dan Jalankan Migration
+
+Buat database:
+
+```
+mysql -u root -p -e "CREATE DATABASE nail_disease_db;"
+```
+
+Jalankan migration:
+
+```
+php artisan migrate
+```
+
+Langkah 6 - Tambahkan Konfigurasi Python Service
+
+Tambahkan pada file .env:
+
+```
+PYTHON_SERVICE_URL=http://127.0.0.1:5000
+```
+
+---
+
+3. SETUP PYTHON SERVICE
+
+---
+
+Langkah 7 - Buat Folder Python Service
+
+Kembali ke folder root project:
+
+```
+cd ..
+```
+
+Buat folder:
+
+```
+mkdir python-service
+cd python-service
+```
+
+Langkah 8 - Buat Virtual Environment
+
+Windows:
+
+```
+python -m venv venv
+venv\Scripts\activate
+```
+
+Mac/Linux:
+
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Jika berhasil, terminal akan menampilkan:
+
+```
+(venv)
+```
+
+Langkah 9 - Buat requirements.txt
+
+Isi file requirements.txt:
+
+```
+flask==3.0.0
+flask-cors==4.0.0
+numpy==1.26.4
+scikit-image==0.22.0
+scikit-learn==1.4.0
+Pillow==10.2.0
+opencv-python==4.9.0.80
+joblib==1.3.2
+```
+
+Langkah 10 - Install Dependency Python
+
+```
+pip install -r requirements.txt
+```
+
+Tunggu hingga proses instalasi selesai.
+
+Langkah 11 - Verifikasi Instalasi
+
+Jalankan:
+
+```
+python -c "import flask; import numpy; import skimage; import sklearn; import PIL; import cv2; print('Semua library berhasil diinstall!')"
+```
+
+Jika muncul pesan:
+
+```
+Semua library berhasil diinstall!
+```
+
+maka instalasi berhasil.
+
+---
+
+4. STRUKTUR FOLDER PROJECT
+
+---
+
+nail-disease-detector/
+│
+├── laravel-app/
+│   ├── .env
+│   ├── composer.json
+│   └── node_modules/
+│
+└── python-service/
+├── requirements.txt
+└── venv/
+
+---
+
+5. MENJALANKAN APLIKASI
+
+---
+
+Aplikasi memerlukan dua terminal yang berjalan bersamaan.
+
+TERMINAL 1 - Laravel
+
+Masuk ke folder Laravel:
+
+```
+cd nail-disease-detector/laravel-app
+```
+
+Jalankan:
+
+```
+php artisan serve
+```
+
+Laravel akan berjalan pada:
+
+```
+http://localhost:8000
+```
+
+TERMINAL 2 - Python Service
+
+Masuk ke folder Python Service:
+
+```
+cd nail-disease-detector/python-service
+```
+
+Aktifkan virtual environment:
+
+Windows:
+
+```
+venv\Scripts\activate
+```
+
+Mac/Linux:
+
+```
+source venv/bin/activate
+```
+
+Jalankan service:
+
+```
+python app.py
+```
+
+Python Service akan berjalan pada:
+
+```
+http://localhost:5000
+```
+
+---
+
+6. TROUBLESHOOTING
+
+---
+
+1. composer: command not found
+
+Solusi:
+Install Composer dan pastikan sudah masuk PATH.
+
+2. php: command not found
+
+Solusi:
+Tambahkan folder PHP ke Environment Variable PATH.
+
+3. pip: command not found
+
+Solusi:
+Gunakan pip3 atau reinstall Python.
+
+4. Error koneksi MySQL
+
+Solusi:
+Periksa DB_DATABASE, DB_USERNAME, dan DB_PASSWORD pada file .env.
+
+5. Port 8000 sudah digunakan
+
+Solusi:
+
+```
+php artisan serve --port=8001
+```
+
+6. Port 5000 sudah digunakan
+
+Solusi:
+Ubah port pada file app.py dan sesuaikan PYTHON_SERVICE_URL pada file .env.
+
+---
+
+7. SELESAI
+
+---
+
+Jika kedua service berjalan tanpa error:
+
+Laravel:
+http://localhost:8000
+
+Python Service:
+http://localhost:5000
+
+Maka aplikasi Nail Disease Detector siap digunakan.
