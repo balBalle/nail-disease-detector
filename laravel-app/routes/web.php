@@ -9,3 +9,5 @@ Route::get('/', function () {
 
 Route::resource('predictions', PredictionController::class)
     ->only(['index', 'create', 'store', 'show']);
+
+Route::delete('/predictions/{id}', [PredictionController::class, 'destroy'])->name('predictions.destroy');

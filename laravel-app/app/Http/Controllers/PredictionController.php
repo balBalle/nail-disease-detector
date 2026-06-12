@@ -18,7 +18,7 @@ class PredictionController extends Controller
     public function create()
 {
     $predictions = Prediction::latest()->get();
-    
+
     return view('predictions.create', compact('predictions'));
 }
 
@@ -76,4 +76,18 @@ class PredictionController extends Controller
         $prediction = Prediction::findOrFail($id);
         return view('predictions.show', compact('prediction'));
     }
+
+    public function destroy($id)
+{
+    $prediction = Prediction::findOrFail($id);
+
+    if ($prediction->image_path && Storage::disk('public')->exists($prediction->image_path)) {
+        Storage::disk('public')->delete($prediction->image_path);
+    }
+
+    $prediction->delete();
+
+    return redirect()->route('predictions.index')
+        ->with('success', 'Prediksi berhasil dihapus.');
+}
 }

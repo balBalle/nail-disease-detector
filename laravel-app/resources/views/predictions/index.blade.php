@@ -108,6 +108,22 @@
     </div>
     @endif
 
+    {{-- ── Success alert (session) ── --}}
+    @if(session('success'))
+    <div id="session-success"
+         class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 animate-fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+        </svg>
+        <div class="flex-1 text-sm">{{ session('success') }}</div>
+        <button onclick="this.parentElement.remove()" class="text-emerald-400 hover:text-emerald-600 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    @endif
+
     {{-- ── Card ── --}}
     <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
 
@@ -150,7 +166,7 @@
                                 <th class="px-6 py-2.5">Confidence</th>
                                 <th class="px-6 py-2.5">Status</th>
                                 <th class="px-6 py-2.5">Waktu</th>
-                                <th class="px-6 py-2.5"></th>
+                                <th class="px-6 py-2.5 text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
@@ -206,15 +222,30 @@
                                 </td>
                                 <td class="px-6 py-3 text-xs text-slate-400 whitespace-nowrap">{{ $p->created_at->diffForHumans() }}</td>
                                 <td class="px-6 py-3 text-right">
-                                    @if($p->status === 'done')
-                                        <a href="{{ route('predictions.show', $p->id) }}"
-                                           class="inline-flex items-center gap-1 text-xs font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
-                                            Detail
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5 15.75 12l-7.5 7.5"/>
-                                            </svg>
-                                        </a>
-                                    @endif
+                                    <div class="flex items-center justify-end gap-3">
+                                        @if($p->status === 'done')
+                                            <a href="{{ route('predictions.show', $p->id) }}"
+                                               class="inline-flex items-center gap-1 text-xs font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
+                                                Detail
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5 15.75 12l-7.5 7.5"/>
+                                                </svg>
+                                            </a>
+                                        @endif
+
+                                        <form action="{{ route('predictions.destroy', $p->id) }}" method="POST"
+                                              onsubmit="return confirm('Hapus prediksi ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="inline-flex items-center gap-1 text-xs font-medium text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors">
+                                                Hapus
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.02-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach
